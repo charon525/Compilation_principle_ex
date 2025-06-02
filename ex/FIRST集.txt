@@ -1,0 +1,33 @@
+FIRST(CompUnit) = FIRST(Decl) U FIRST(FuncDef) = {'conts', 'int', 'float', 'void'}
+FIRST(Decl) = FIRST(ConstDecl) U FIRST(VarDecl) = {'conts', 'int', 'float'}
+FIRST(ConstDecl) = {'const'}
+FIRST(BType) = {'int', 'float'}
+FIRST(ConstDef) = {Ident}
+FIRST(ConstInitVal) = FIRST(ConstExp) U { '{' } = { '{', '(', Ident, IntConst, floatConst, '+', '-', '!' }
+FIRST(VarDecl) = FIRST(BType) = { 'int', 'float' }
+FIRST(VarDef) = {Ident}
+FIRST(InitVal) = FIRST(Exp) U { '{' } = { '{', '(', Ident, IntConst, floatConst, '+', '-', '!' }
+FIRST(FuncDef) = FIRST(FuncType) = { 'void', 'int', 'float' }
+FIRST(FuncType) = { 'void', 'int', 'float' }
+FIRST(FuncFParam) = FIRST(BType) = { 'int', 'float' }
+FIRST(FuncFParams) = FIRST(FuncFParam) = { 'int', 'float' }
+FIRST(Block) = { '{' };
+FIRST(BlockItem) = FIRST(Decl) U FIRST(Stmt) = { '{', '(', ';', Ident, IntConst, floatConst, '+', '-', '!',
+'if', 'while', 'break', 'continue', 'return', 'const', 'int', 'float' }
+FIRST(Stmt) = FIRST(LVal) U {'if'} U {'while'} U {'break'} U { 'continue' } U { 'return ' } U FIRST(Exp) = { '{', '(', ';', Ident, IntConst, floatConst, '+', '-', '!',
+'if', 'while', 'break', 'continue', 'return' }
+FIRST(Exp) = FIRST(AddExp) = { '(', Ident, IntConst, floatConst, '+', '-', '!' }
+FIRST(Cond) = FIRST(LOrExp) = { '(', Ident, IntConst, floatConst, '+', '-', '!' }
+FIRST(LVal) = {Ident}
+FIRST(Number) = { IntConst, floatConst }
+FIRST(PrimaryExp) = { '(' } U FIRST(LVal) U FIRST(Number) = { '(', Ident, IntConst, floatConst }
+FIRST(UnaryExp) = FIRST(PrimaryExp) U {Ident} U FIRST(UnaryOp) = { '(', Ident, IntConst, floatConst, '+', '-', '!' }
+FIRST(UnaryOp) = { '+', '-', '!' }
+FIRST(FuncRParams) = FIRST(Exp) = { '(', Ident, IntConst, floatConst, '+', '-', '!' }
+FIRST(MulExp) = FIRST(UnaryExp) = { '(', Ident, IntConst, floatConst, '+', '-', '!' }
+FIRST(AddExp) = FIRST(MulExp) = { '(', Ident, IntConst, floatConst, '+', '-', '!' }
+FIRST(RelExp) = FIRST(AddExp) = { '(', Ident, IntConst, floatConst, '+', '-', '!' }
+FIRST(EqExp) = FIRST(RelExp) = { '(', Ident, IntConst, floatConst, '+', '-', '!' }
+FIRST(LAndExp) = FIRST(EqExp) = { '(', Ident, IntConst, floatConst, '+', '-', '!' }
+FIRST(LOrExp) = FIRST(LAndExp) = { '(', Ident, IntConst, floatConst, '+', '-', '!' }
+FIRST(ConstExp) = FIRST(AddExp) = { '(', Ident, IntConst, floatConst, '+', '-', '!' }

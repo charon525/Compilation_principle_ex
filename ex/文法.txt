@@ -1,0 +1,114 @@
+CompUnit -> (Decl | FuncDef) [CompUnit]  
+Decl -> ConstDecl | VarDecl              
+ConstDecl -> 'const' BType ConstDef { ',' ConstDef } ';'
+    ConstDecl.t
+BType -> 'int' | 'float'
+    BType.t
+ConstDef -> Ident { '[' ConstExp ']' } '=' ConstInitVal
+    ConstDef.arr_name
+ConstInitVal -> ConstExp | '{' [ ConstInitVal { ',' ConstInitVal } ] '}'
+    ConstInitVal.v
+    ConstInitVal.t
+VarDecl -> BType VarDef { ',' VarDef } ';'
+    VarDecl.t
+VarDef -> Ident { '[' ConstExp ']' } [ '=' InitVal ]
+    VarDef.arr_name
+InitVal -> Exp | '{' [ InitVal { ',' InitVal } ] '}'
+    InitVal.is_computable
+    InitVal.v
+    InitVal.t
+FuncDef -> FuncType Ident '(' [FuncFParams] ')' Block
+    FuncDef.t
+    FuncDef.n
+FuncType -> 'void' | 'int' | 'float'
+FuncFParam -> BType Ident ['[' ']' { '[' Exp ']' }]
+FuncFParams -> FuncFParam { ',' FuncFParam }
+Block -> '{' { BlockItem } '}'
+BlockItem -> Decl | Stmt
+Stmt -> LVal '=' Exp ';' | Block | 'if' '(' Cond ')' Stmt [ 'else' Stmt ] | 'while' '(' Cond ')' Stmt | 'break' ';' | 'continue'
+';' | 'return' [Exp] ';' | [Exp] ';'
+Exp -> AddExp
+    Exp.is_computable
+    Exp.v
+    Exp.t
+Cond -> LOrExp
+    Cond.is_computable
+    Cond.v
+    Cond.t
+LVal -> Ident {'[' Exp ']'}
+    LVal.is_computable
+    LVal.v
+    LVal.t
+    LVal.i
+Number -> IntConst | floatConst
+PrimaryExp -> '(' Exp ')' | LVal | Number
+    PrimaryExp.is_computable
+    PrimaryExp.v
+    PrimaryExp.t
+UnaryExp -> PrimaryExp | Ident '(' [FuncRParams] ')' | UnaryOp UnaryExp
+    UnaryExp.is_computable
+    UnaryExp.v
+    UnaryExp.t
+UnaryOp -> '+' | '-' | '!'
+FuncRParams -> Exp { ',' Exp }
+MulExp -> UnaryExp { ('*' | '/' | '%') UnaryExp }
+    MulExp.is_computable
+    MulExp.v
+    MulExp.t
+AddExp -> MulExp { ('+' | '-') MulExp }
+    AddExp.is_computable
+    AddExp.v
+    AddExp.t
+RelExp -> AddExp { ('<' | '>' | '<=' | '>=') AddExp }
+    RelExp.is_computable
+    RelExp.v
+    RelExp.t
+EqExp -> RelExp { ('==' | '!=') RelExp }
+    EqExp.is_computable
+    EqExp.v
+    EqExp.t
+LAndExp -> EqExp [ '&&' LAndExp ]
+    LAndExp.is_computable
+    LAndExp.v
+    LAndExp.t
+LOrExp -> LAndExp [ '||' LOrExp ]
+    LOrExp.is_computable
+    LOrExp.v
+    LOrExp.t
+ConstExp -> AddExp
+    ConstExp.is_computable: true
+    ConstExp.v
+    ConstExp.t
+
+
+CompUnit：表示整个程序单元，包含了程序中的声明和函数定义。
+Decl：表示声明，可以是常量声明（ConstDecl）或变量声明（VarDecl）。
+ConstDecl：常量声明，用于定义常量变量。
+BType：基本类型，可以是整型（int）或浮点型（float）。
+ConstDef：常量定义，用于定义具体的常量变量。
+ConstInitVal：常量初始值，可以是一个常量表达式（ConstExp）或者一组初始值。
+VarDecl：变量声明，用于定义变量。
+VarDef：变量定义，用于定义具体的变量。
+InitVal：变量初始值，可以是一个表达式（Exp）或者一组初始值。
+FuncDef：函数定义，用于定义函数。
+FuncType：函数返回类型，可以是void、int或float。
+FuncFParam：函数形参，用于定义函数参数。
+FuncFParams：函数形参列表，包含多个函数形参。
+Block：代码块，表示一组语句的集合。
+BlockItem：代码块中的元素，可以是声明（Decl）或语句（Stmt）。
+Stmt：语句，可以是赋值语句、条件语句、循环语句等。
+Exp：表达式，可以是各种运算表达式的组合。
+Cond：条件表达式，用于条件判断。
+LVal：左值，用于表示赋值操作的目标。
+Number：数字，可以是整数常量（IntConst）或浮点数常量（floatConst）。
+PrimaryExp：基本表达式，可以是括号包裹的表达式、变量或数字。
+UnaryExp：一元表达式，可以是基本表达式、函数调用或一元运算。
+UnaryOp：一元运算符，可以是加号、减号或逻辑非。
+FuncRParams：函数实参，用于函数调用时传递参数。
+MulExp：乘法表达式，表示乘法、除法或取余运算的组合。
+AddExp：加法表达式，表示加法或减法运算的组合。
+RelExp：关系表达式，表示关系运算的组合。
+EqExp：相等表达式，表示相等或不等运算的组合。
+LAndExp：逻辑与表达式，表示逻辑与运算的组合。
+LOrExp：逻辑或表达式，表示逻辑或运算的组合。
+ConstExp：常量表达式，表示一个常量值。
